@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>AJAX</title>
+</head>
+<body>
+  <div>
+
+    <div class="todo-box">
+      <div class="todo-box__head">
+        <button class="todo-box__btn js_task_add_btn">Добавить задачу</button>
+      </div>
+      <div class="todo-box__body">
+        <ul class="todo-box__body-list js_task_list">
+        </ul>
+      </div>
+      <div class="todo-box__footer">
+        <div class="todo-box__footer-tasks todo-box__footer-tasks--all">
+          <span class="todo-box__footer-tasks-title">Всего задач:</span>
+          <span class="todo-box__footer-tasks-count js_tasks_count_all"></span>
+        </div>
+        <div class="todo-box__footer-tasks todo-box__footer-tasks--checked">
+          <span class="todo-box__footer-tasks-title">Выполнено задач:</span>
+          <span class="todo-box__footer-tasks-count js_tasks_count_checked"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+  <script>
+  "use strict";
+  $(document).ready(function() {
+    const taskList = $('.js_task_list');
+    const addedElem = $(`<li class="todo-box__body-list-item js_task_item" data-id="1" data-check="false">
+            <div class="todo-box__body-list-item-wrap">
+              <div class="todo-box__body-list-item-control">
+                <input id="" type="checkbox" name="">
+              </div>
+              <div class="todo-box__body-list-item-info">
+                <div class="todo-box__body-list-item-info-name js_task_name">Name</div>
+                <div class="todo-box__body-list-item-info-descr js_task_description">description</div>
+              </div>
+              <div class="todo-box__body-list-item-control">
+                  <button class="todo-box__btn js_task_edit_btn">Редактировать задачу</button>
+                  <button class="todo-box__btn js_task_remove_btn">Удалить задачу</button>
+              </div>
+            </div>
+          </li>`);
+
+    $('.js_task_add_btn').on('click', function() {
+      //вызываем модальное окно для добавления задачи
+    });
+
+    $.ajax({
+      method: "get",
+      url: `http://localhost:3030/tasks`,
+      success: (data) => {
+        addElement(data);
+      },
+      error: (err) => {
+        console.log("error", err);
+      },
+      complete: (data) => {
+        console.log("complete", data);
+      }
+    });
+
+    function addElement(data) {
+      for(let obj of data) {
+        taskList.append(
+          `<li class="todo-box__body-list-item js_task_item" data-id="${obj.id}" data-check="${obj.is_check}">
+            <div class="todo-box__body-list-item-wrap">
+              <div class="todo-box__body-list-item-control">
+                <input id="" type="checkbox" name="">
+              </div>
+              <div class="todo-box__body-list-item-info">
+                <div class="todo-box__body-list-item-info-name js_task_name">${obj.name}</div>
+                <div class="todo-box__body-list-item-info-descr js_task_description">${obj.description}</div>
+              </div>
+              <div class="todo-box__body-list-item-control">
+                <button class="todo-box__btn js_task_edit_btn">Редактировать задачу</button>
+                <button class="todo-box__btn js_task_remove_btn">Удалить задачу</button>
+              </div>
+            </div>
+          </li>`
+        );
+      }
+    }
+  });
+  </script>
+</body>
+</html>
